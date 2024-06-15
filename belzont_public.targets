@@ -1,0 +1,72 @@
+<Project>
+  <PropertyGroup>
+    <Bursted Condition="'$(Bursted)'==''">false</Bursted>
+  </PropertyGroup>
+  <!--Publishing generation files-->
+  <Target Name="SetupAttributes" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <PublishContent>
+        <ModId Value="$(ModId)" />
+        <DisplayName Value="$(DisplayName)" />
+        <ShortDescription Value="$(ShortDescription)" />
+        <LongDescription />
+        <Thumbnail Value="$(ThumbnailPath)" />
+        <ForumLink Value="$(ForumLink)" />
+        <ModVersion Value="$(Version)" />
+        <GameVersion Value="$(GameVersion)" />
+        <ChangeLog />
+      </PublishContent>
+      <PublishContent>$(PublishContent)@(ModTag->'&lt;Tag Value="%(Identity)" /&gt;','%0a%0d')</PublishContent>
+      <PublishContent>$(PublishContent)@(Screenshots->'&lt;Screenshot Value="%(Identity)" /&gt;','%0a%0d')</PublishContent>
+      <PublishContent>$(PublishContent)@(Dependency->'&lt;Dependency Id="%(ModId)" ModVersion="%(Version)" DisplayName="%(DisplayName)"/&gt;','%0a%0d')</PublishContent>
+    </PropertyGroup>
+    <XmlPoke XmlInputPath="$(PublishConfigurationPath)" Value="$(PublishContent)" Query="//Publish" />
+
+    <XmlPoke XmlInputPath="$(PublishConfigurationPath)" Value="$([System.IO.File]::ReadAllText($(ProjectDir)/longDescription.md).Replace('%26','%26amp%3B').Replace('%22','%26quot%3B').Replace('%3c','%26lt%3B').Replace('%3e','%26gt%3B'))" Query="//LongDescription" />
+    <XmlPoke XmlInputPath="$(PublishConfigurationPath)" Value="$([System.IO.File]::ReadAllText($(ProjectDir)changelog.md).Replace('%26','%26amp%3B').Replace('%22','%26quot%3B').Replace('%3c','%26lt%3B').Replace('%3e','%26gt%3B'))" Query="//ChangeLog" />
+  </Target>
+
+  <!-- Since the post processor is overriden, the original is disabled -->
+  <Target Name="RunModPostProcessor" AfterTargets="AfterBuild" Condition="false" />
+  <ItemGroup>
+    <PackageReference Include="ilmerge" Version="3.0.40" />
+  </ItemGroup>
+
+  <Target Name="MergeDll" AfterTargets="DeployWIP">
+    <Exec Command="del &quot;$(DeployDir)\*.pdb&quot;" />
+    <ItemGroup>
+      <ModDlls Include="$(DeployDir)/*.dll" Exclude="$(DeployDir)/K45EUIS_Ext.dll"/>
+    </ItemGroup>
+    <Message Text="RUN MERGE DLL $(Bursted)" Importance="high"/>
+  </Target>
+
+  <Target Name="RunMergeDll" AfterTargets="DeployWIP" Condition="'@(ModDlls->Count())' &gt; 1" DependsOnTargets="MergeDll">
+    <ItemGroup>
+      <ModDlls2 Include="$(DeployDir)/*.dll" Exclude="$(DeployDir)/$(TargetName).dll;$(DeployDir)/K45EUIS_Ext.dll" />
+    </ItemGroup>
+    <Exec Command="$(ILMergeConsolePath)  /lib:&quot;$(K45_CS2_ALLROOT)\_Managed DLLs&quot; /targetplatform:v4,&quot;$(K45_CS2_ALLROOT)\_Managed DLLs&quot; /out:&quot;$(DeployDir)/$(SolutionName).dll&quot; &quot;$(DeployDir)/$(TargetName).dll&quot; @(ModDlls2->'&quot;%(FullPath)&quot;', ' ')" />
+    <ItemGroup>
+      <DllsToDelete Include="$(DeployDir)/*.dll" Exclude="$(DeployDir)/$(SolutionName).dll;$(DeployDir)/K45EUIS_Ext.dll" />
+    </ItemGroup>
+    <Exec Command="del &quot;$(DeployDir)\*.pdb&quot;" />
+    <Exec Command="del  @(DllsToDelete->'&quot;%(FullPath)&quot;', ' ')" />
+    <PropertyGroup>
+      <TargetPath>$(DeployDir)/$(SolutionName).dll</TargetPath>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="RunBurstDll" AfterTargets="DeployWIP" Condition="$(Bursted)" DependsOnTargets="RunMergeDll">
+    <Error Condition="!Exists('$(ModPostProcessorFullPath)')" Text="Post processor not found, please check the path: $(ModPostProcessorFullPath)" />
+    <PropertyGroup>
+      <ModPostProcessorArgs>"$(ModPostProcessorFullPath)" PostProcess "$(TargetPath)" -r "@(ReferencePath)" -u "$(UnityModProjectFullPath)" -t Windows -t macOS -t Linux -d -v</ModPostProcessorArgs>
+    </PropertyGroup>
+    <Message Text="Run post processor: $(ModPostProcessorArgs)" Importance="high" />
+    <Exec Command="$(ModPostProcessorArgs)" />
+  </Target>
+
+  <Target Name="FixBuildGetFullPaths" AfterTargets="BuildGetFullPaths">
+    <PropertyGroup>
+      <DeployDir>$(LocalModsPath)\$(SolutionName)</DeployDir>
+    </PropertyGroup>
+  </Target>
+</Project>
