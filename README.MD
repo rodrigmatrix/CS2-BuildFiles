@@ -32,6 +32,12 @@ To fully take advantage from `belzont_public.targets` targets, you need to have 
 </ItemGroup>
 ```
 
+Also, add to your project two files:
+- `longDescription.md` containing the description that will be shown on PDXMods site
+- `changelog.md` containing the changelog that will be published attached to this version at the PDXMods
+
+Both files will have the XML special characters parsed to their correspondent XML entities (`&<>"` characters).
+
 The default post processor will be disabled. To enable bursting, you need to add the property `<Bursted>True</Bursted>` to your csproj.
 
 ## Recommendations
