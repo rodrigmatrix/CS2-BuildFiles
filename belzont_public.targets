@@ -7,8 +7,8 @@
     <PropertyGroup>
       <PublishContent>
         <ModId Value="$(ModId)" />
-        <DisplayName Value="$(DisplayName)" />
-        <ShortDescription Value="$(ShortDescription)" />
+        <DisplayName Value="$([System.String]::Copy($(DisplayName)).Replace('%26','%26amp%3B').Replace('%22','%26quot%3B').Replace('%3c','%26lt%3B').Replace('%3e','%26gt%3B'))" />
+        <ShortDescription Value="$([System.String]::Copy($(ShortDescription)).Replace('%26','%26amp%3B').Replace('%22','%26quot%3B').Replace('%3c','%26lt%3B').Replace('%3e','%26gt%3B'))" />
         <LongDescription />
         <Thumbnail Value="$(ThumbnailPath)" />
         <ForumLink Value="$(ForumLink)" />
