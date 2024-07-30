@@ -1,6 +1,7 @@
 <Project>
   <PropertyGroup>
     <Bursted Condition="'$(Bursted)'==''">false</Bursted>
+    <DefineConstants Condition="'$(Bursted)'">BURST</DefineConstants>
   </PropertyGroup>
   <!--Publishing generation files-->
   <Target Name="SetupAttributes" BeforeTargets="BeforeBuild">
@@ -58,7 +59,7 @@
   <Target Name="RunBurstDll" AfterTargets="DeployWIP" Condition="$(Bursted)" DependsOnTargets="RunMergeDll">
     <Error Condition="!Exists('$(ModPostProcessorFullPath)')" Text="Post processor not found, please check the path: $(ModPostProcessorFullPath)" />
     <PropertyGroup>
-      <ModPostProcessorArgs>"$(ModPostProcessorFullPath)" PostProcess "$(TargetPath)" -r "@(ReferencePath)" -u "$(UnityModProjectFullPath)" -t Windows -t macOS -t Linux -d -v</ModPostProcessorArgs>
+      <ModPostProcessorArgs>"$(ModPostProcessorFullPath)" PostProcess "$(TargetPath)" -u "$(UnityModProjectFullPath)" @(ReferencePath->'-r "%(Identity)"', ' ') -p Windows -p macOS -p Linux -d -v</ModPostProcessorArgs>
     </PropertyGroup>
     <Message Text="Run post processor: $(ModPostProcessorArgs)" Importance="high" />
     <Exec Command="$(ModPostProcessorArgs)" />
