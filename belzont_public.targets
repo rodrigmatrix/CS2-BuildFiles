@@ -1,6 +1,7 @@
 <Project>
   <PropertyGroup>
     <Bursted Condition="'$(Bursted)'==''">false</Bursted>
+    <DebuggerMode Condition="'$(DebuggerMode)'==''">false</DebuggerMode>
     <DefineConstants Condition="'$(Bursted)'">BURST</DefineConstants>
   </PropertyGroup>
   <!--Publishing generation files-->
@@ -33,7 +34,7 @@
     <PackageReference Include="ilmerge" Version="3.0.40" />
   </ItemGroup>
 
-  <Target Name="MergeDll" AfterTargets="DeployWIP">
+  <Target Name="MergeDll" AfterTargets="DeployWIP" Condition="!$(DebuggerMode)">
     <Exec Command="del &quot;$(DeployDir)\*.pdb&quot;" />
     <ItemGroup>
       <ModDlls Include="$(DeployDir)/*.dll" Exclude="$(DeployDir)/K45EUIS_Ext.dll"/>
@@ -41,7 +42,7 @@
     <Message Text="RUN MERGE DLL $(Bursted)" Importance="high"/>
   </Target>
 
-  <Target Name="RunMergeDll" AfterTargets="DeployWIP" Condition="'@(ModDlls->Count())' &gt; 1" DependsOnTargets="MergeDll">
+  <Target Name="RunMergeDll" AfterTargets="DeployWIP" Condition="'@(ModDlls->Count())' &gt; 1 AND !$(DebuggerMode)" DependsOnTargets="MergeDll">
     <ItemGroup>
       <ModDlls2 Include="$(DeployDir)/*.dll" Exclude="$(DeployDir)/$(TargetName).dll;$(DeployDir)/K45EUIS_Ext.dll" />
     </ItemGroup>
