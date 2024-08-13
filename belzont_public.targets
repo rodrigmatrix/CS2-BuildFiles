@@ -60,7 +60,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(ModPostProcessorFullPath)')" Text="Post processor not found, please check the path: $(ModPostProcessorFullPath)" />
     <PropertyGroup>
-      <ModPostProcessorArgs>"$(ModPostProcessorFullPath)" PostProcess "$(TargetPath)" -u "$(UnityModProjectFullPath)" @(ReferencePath->'-r "%(Identity)"', ' ') -p Windows -p macOS -p Linux -d -v</ModPostProcessorArgs>
+      <ModPostProcessorArgs>"$(ModPostProcessorFullPath)" PostProcess "$(TargetPath)" -u "$(UnityModProjectFullPath)" @(ReferencePath->'-r "%(Identity)"', ' ') -p Windows -d -v</ModPostProcessorArgs>
     </PropertyGroup>
     <Message Text="Run post processor: $(ModPostProcessorArgs)" Importance="high" />
     <Exec Command="$(ModPostProcessorArgs)" />
