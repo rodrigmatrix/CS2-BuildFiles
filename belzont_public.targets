@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Bursted Condition="'$(Bursted)'==''">false</Bursted>
     <DebuggerMode Condition="'$(DebuggerMode)'==''">false</DebuggerMode>
-    <DefineConstants Condition="'$(Bursted)'">BURST</DefineConstants>
+    <DefineConstants Condition="'$(Bursted)'">BURST;$(DefineConstants)</DefineConstants>
     <IsBelzontCommonsMod>true</IsBelzontCommonsMod>
   </PropertyGroup>
   <!--Publishing generation files-->
