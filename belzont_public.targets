@@ -3,9 +3,19 @@
     <Bursted Condition="'$(Bursted)'==''">false</Bursted>
     <DebuggerMode Condition="'$(DebuggerMode)'==''">false</DebuggerMode>
     <DefineConstants Condition="'$(Bursted)'">BURST</DefineConstants>
+    <IsBelzontCommonsMod>true</IsBelzontCommonsMod>
   </PropertyGroup>
   <!--Publishing generation files-->
   <Target Name="SetupAttributes" BeforeTargets="BeforeBuild">
+    <ItemGroup Condition="$(IsBelzontCommonsMod)">
+      <AssemblyAttribute Include="Belzont.AssemblyUtility.KlyteModDescriptionAttribute">
+        <_Parameter1>$(ModId)</_Parameter1>
+        <_Parameter2>$(DisplayName)</_Parameter2>
+        <_Parameter3>$(ShortDescription)</_Parameter3>
+        <_Parameter4>$(ForumLink)</_Parameter4>
+        <_Parameter5>$(GitHubLink)</_Parameter5>
+      </AssemblyAttribute>
+    </ItemGroup>
     <PropertyGroup>
       <PublishContent>
         <ModId Value="$(ModId)" />
