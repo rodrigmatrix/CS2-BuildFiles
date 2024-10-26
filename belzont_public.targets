@@ -27,6 +27,9 @@
         <ModVersion Value="$(Version)" />
         <GameVersion Value="$(GameVersion)" />
         <ChangeLog />
+        <ExternalLink Type="github" Url="$(GitHubLink)" />
+        <ExternalLink Type="youtube" Url="https://www.youtube.com/Klyte45" />
+        <ExternalLink Type="kofi" Url="https://ko-fi.com/klyte45" />        
       </PublishContent>
       <PublishContent>$(PublishContent)@(ModTag->'&lt;Tag Value="%(Identity)" /&gt;','%0a%0d')</PublishContent>
       <PublishContent>$(PublishContent)@(Screenshots->'&lt;Screenshot Value="%(Identity)" /&gt;','%0a%0d')</PublishContent>
