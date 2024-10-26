@@ -47,7 +47,7 @@
     <PackageReference Include="ilmerge" Version="3.0.40" />
   </ItemGroup>
 
-  <Target Name="MergeDll" AfterTargets="DeployWIP" Condition="!$(DebuggerMode)">
+  <Target Name="MergeDll" AfterTargets="DeployWIP" Condition="!$(DebuggerMode) AND '$(NeedBuild)'">
     <Exec Command="del &quot;$(DeployDir)\*.pdb&quot;" />
     <ItemGroup>
       <ModDlls Include="$(DeployDir)/*.dll" Exclude="$(DeployDir)/K45EUIS_Ext.dll"/>
