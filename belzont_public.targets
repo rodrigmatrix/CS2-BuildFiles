@@ -4,6 +4,7 @@
     <DebuggerMode Condition="'$(DebuggerMode)'==''">false</DebuggerMode>
     <DefineConstants Condition="'$(Bursted)'">BURST;$(DefineConstants)</DefineConstants>
     <IsBelzontCommonsMod>true</IsBelzontCommonsMod>
+    <DisableFastUpToDateCheck Condition="'$(Configuration)'=='Release'">true</DisableFastUpToDateCheck>
   </PropertyGroup>
   <!--Publishing generation files-->
   <Target Name="SetupAttributes" BeforeTargets="BeforeBuild">
