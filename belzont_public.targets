@@ -5,9 +5,7 @@
     <DefineConstants Condition="'$(Bursted)'">BURST;$(DefineConstants)</DefineConstants>
     <IsBelzontCommonsMod>true</IsBelzontCommonsMod>
     <DisableFastUpToDateCheck Condition="'$(Configuration)'=='Release'">true</DisableFastUpToDateCheck>
-    <YoutubeLink>https://www.youtube.com/Klyte45</YoutubeLink>
-    <KofiLink>https://ko-fi.com/klyte45</KofiLink>
-    
+    <KofiLink>https://ko-fi.com/rodrigmatrix</KofiLink>
   </PropertyGroup>
   <!--Publishing generation files-->
   <Target Name="SetupAttributes" BeforeTargets="BeforeBuild">
@@ -56,9 +54,6 @@
 
   <Target Name="MergeDll" AfterTargets="DeployWIP" Condition="!$(DebuggerMode) AND '$(NeedBuild)'">
     <Exec Command="del &quot;$(DeployDir)\*.pdb&quot;" />
-    <ItemGroup>
-      <ModDlls Include="$(DeployDir)/*.dll" Exclude="$(DeployDir)/K45EUIS_Ext.dll"/>
-    </ItemGroup>
     <Message Text="RUN MERGE DLL $(Bursted)" Importance="high"/>
   </Target>
 
